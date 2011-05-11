@@ -1,5 +1,5 @@
 import unittest
-from infi.unittest import TestCase, TestLoader, params, TestResult
+from infi.unittest import TestCase, TestLoader, parameters, TestResult
 
 class ParametersTest(unittest.TestCase):
     def test__parameters(self):
@@ -8,8 +8,8 @@ class ParametersTest(unittest.TestCase):
         expected = [(a, b) for a in values_for_a for b in values_for_b]
         executed = []
         class SampleTest(TestCase):
-            @params.a.each(values_for_a)
-            @params.b.each(values_for_b)
+            @parameters.iterate('a', values_for_a)
+            @parameters.iterate('b', values_for_b)
             def test_something(self, a, b):
                 executed.append((a, b))
         suite = TestLoader().loadTestsFromTestCase(SampleTest)

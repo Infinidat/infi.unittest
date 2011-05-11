@@ -24,9 +24,9 @@ When using infi.unittest, you get a slightly better way of doing this:
 ::
 
  >>> from infi.unittest import TestCase
- >>> from infi.unittest import params
+ >>> from infi.unittest import parameters
  >>> class MyTest(TestCase):
- ...     @params.color.each(['orange', 'yellow'])
+ ...     @parameters.iterate('color', ['orange', 'yellow'])
  ...     def test__api_call(self, color):
  ...         some_api(color) # yay!
 
@@ -34,8 +34,8 @@ The above will construct one test case per possible value, thus separating the c
 ::
 
  >>> class MyTest(TestCase):
- ...     @params.a.each([1, 2, 3])
- ...     @params.b.each([4, 5, 6])
+ ...     @parameters.iterate('a', [1, 2, 3])
+ ...     @parameters.iterate('b', [4, 5, 6])
  ...     def test__some_api(self, a, b):
  ...         pass
 

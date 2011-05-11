@@ -1,8 +1,7 @@
 from __future__ import absolute_import
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 from .case import TestCase
 from .loader import TestLoader
-from .parameters import params
 from .result import TestResult
 
 defaultTestLoader = TestLoader

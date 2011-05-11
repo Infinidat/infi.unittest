@@ -1,24 +1,8 @@
-class ParameterReference(object):
-    def __getattr__(self, name):
-        return ParameterSpecificationBuilder(name)
-
-params = ParameterReference()
-
-class ParameterSpecificationBuilder(object):
-    def __init__(self, name):
-        super(ParameterSpecificationBuilder, self).__init__()
-        self._name = name
-    def each(self, options):
-        return ParameterRange(self._name, options)
-
-class ParameterRange(object):
-    def __init__(self, name, options):
-        super(ParameterRange, self).__init__()
-        self._name = name
-        self._options = options
-    def __call__(self, function):
-        get_or_create_parameter_specs(function).add_range(self._name, self._options)
-        return function
+def iterate(argument_name, options):
+    def _decorator(func):
+        get_or_create_parameter_specs(func).add_range(argument_name, options)
+        return func
+    return _decorator
 
 def get_parameter_spec(function):
     return getattr(function, "__infi_unittest_specs__", None)
