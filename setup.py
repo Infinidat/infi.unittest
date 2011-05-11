@@ -31,7 +31,7 @@ setup(name="infi.unittest",
       author="Rotem Yaari",
       author_email="",
       version=VERSION,
-      packages=list(_find_all_subpackages("infi.unittest")),
+      packages=list(_find_all_subpackages("infi")),
       install_requires=[],
       scripts=[],
       )
