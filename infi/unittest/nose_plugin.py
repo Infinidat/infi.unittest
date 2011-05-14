@@ -1,7 +1,7 @@
 from types import MethodType
 from nose.plugins.base import Plugin
 from nose.loader import TestLoader as NoseTestLoader
-from .loader import TestLoader
+from .loader import get_test_cases_from_test_class
 
 class NosePlugin(Plugin):
     name = "infi"
@@ -15,7 +15,7 @@ class NosePlugin(Plugin):
             plugins = self.config.plugins
             for case in plugins.loadTestsFromTestCase(testCaseClass):
                 cases.append(case)
-            cases.extend(TestLoader()._get_test_cases(testCaseClass))
+            cases.extend(get_test_cases_from_test_class(testCaseClass))
             return self.suiteClass(cases)
         return MethodType(loadTestsFromTestCase, loader, type(loader))
 

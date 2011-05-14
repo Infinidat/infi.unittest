@@ -26,3 +26,6 @@ class TestLoader(unittest.TestLoader):
             test_case_class(test_case_name, args=args, kwargs=kwargs)
             for args, kwargs in parameter_specs.iterate_args_kwargs()
             ]
+
+default_loader = TestLoader()
+get_test_cases_from_test_class = default_loader._get_test_cases
