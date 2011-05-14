@@ -1,6 +1,13 @@
 Introduction
 ------------
-*infi.unittest* is a set of extensions for the standard *unittest* module provided by the Python standard library. It provides several improvements over the original implementation, described below
+*infi.unittest* is a set of extensions for the standard *unittest* module provided by the Python standard library. It provides several improvements over the original implementation, described below.
+
+Installation
+------------
+The installation is done in the ordinary way:
+::
+
+  python setup.py install
 
 Features
 --------
@@ -8,7 +15,7 @@ Features
 Test Parameters
 ===============
 
-One of the most annoying things about *unittest* is that you cannot easily specify test parameters. If you have a test to test an API with parameters, and you want several cases, each testing a specific value which should work and has a meaning, this can be annoying:
+One of the most annoying things about *unittest* is that you cannot easily specify test parameters. If you have a test to test an API with parameters, and you want several cases, each testing a specific value which should work and has a meaning, this can be annoying, and breaks the DRY principle:
 ::
 
  >>> import unittest
@@ -39,4 +46,6 @@ The above will construct one test case per possible value, thus separating the c
  ...     def test__some_api(self, a, b):
  ...         pass
 
-
+Nose Integration
+================
+*infi.unittest* breaks compatibility with the excellent `nose: <http://code.google.com/p/python-nose/>` tool, itprovides a plugin to restore that compatibility. Running nose with the **--with-infi** option will make it properly process infi unittests. Of course this isn't needed if you're not using any of the features added by infi.
