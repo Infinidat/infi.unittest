@@ -34,4 +34,9 @@ setup(name="infi.unittest",
       packages=list(_find_all_subpackages("infi")),
       install_requires=[],
       scripts=[],
+      entry_points = {
+            'nose.plugins.0.10': [
+                'infi = infi.unittest.nose_plugin:NosePlugin'
+                ]
+            },
       )

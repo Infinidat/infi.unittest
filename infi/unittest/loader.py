@@ -4,14 +4,15 @@ from .parameters import get_parameter_spec
 
 class TestLoader(unittest.TestLoader):
     def loadTestsFromTestCase(self, testCaseClass):
+        return self.suiteClass(self._get_test_cases(testCaseClass))
+    def _get_test_cases(self, test_case_class):
         # a bit of copy-paste from the default implementation, unfortunately
-        test_case_names = self.getTestCaseNames(testCaseClass)
-        if not test_case_names and hasattr(testCaseClass, 'runTest'):
+        test_case_names = self.getTestCaseNames(test_case_class)
+        if not test_case_names and hasattr(test_case_class, 'runTest'):
             test_case_names = ['runTest']
 
-        test_cases = self._get_test_cases(testCaseClass, test_case_names)
-        return self.suiteClass(test_cases)
-    def _get_test_cases(self, test_case_class, test_case_names):
+        return self._get_test_cases_by_names(test_case_class, test_case_names)
+    def _get_test_cases_by_names(self, test_case_class, test_case_names):
         returned = []
         for test_case_name in test_case_names:
             returned.extend(self._multiply_test_case_parameters(test_case_class, test_case_name))
