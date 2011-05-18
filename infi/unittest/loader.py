@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+import functools
 import unittest
 from .parameters import get_parameter_spec
 
@@ -23,9 +24,19 @@ class TestLoader(unittest.TestLoader):
         if parameter_specs is None:
             return [test_case_class(test_case_name)]
         return [
-            test_case_class(test_case_name, args=args, kwargs=kwargs)
+            self._make_function_test_case(test_case_class, test_case_name=test_case_name, args=args, kwargs=kwargs)
             for args, kwargs in parameter_specs.iterate_args_kwargs()
             ]
+    def _make_function_test_case(self, test_case_class, test_case_name, args, kwargs):
+        test_case_instance = test_case_class(test_case_name)
+        return unittest.FunctionTestCase(
+            functools.partial(
+                getattr(test_case_instance, test_case_name),
+                *args,
+                **kwargs),
+            setUp=test_case_instance.setUp,
+            tearDown=test_case_instance.tearDown
+            )
 
 default_loader = TestLoader()
 get_test_cases_from_test_class = default_loader._get_test_cases
