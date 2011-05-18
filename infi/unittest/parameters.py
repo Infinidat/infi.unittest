@@ -5,13 +5,18 @@ def iterate(argument_name, options):
     return _decorator
 
 def get_parameter_spec(function):
-    return getattr(function, "__infi_unittest_specs__", None)
+    return getattr(function, "__infi_unittest_specs__", NO_SPECS)
 
 def get_or_create_parameter_specs(function):
     returned = get_parameter_spec(function)
-    if returned is None:
+    if returned is NO_SPECS:
         returned = function.__infi_unittest_specs__ = ParameterSpecs()
     return returned
+
+class _NO_SPECS(object):
+    def iterate_args_kwargs(self):
+        return [((), {})]
+NO_SPECS = _NO_SPECS()
 
 class ParameterSpecs(object):
     def __init__(self):

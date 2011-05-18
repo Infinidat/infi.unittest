@@ -21,22 +21,19 @@ class TestLoader(unittest.TestLoader):
     def _multiply_test_case_parameters(self, test_case_class, test_case_name):
         method = getattr(test_case_class, test_case_name)
         parameter_specs = get_parameter_spec(method)
-        if parameter_specs is None:
-            return [test_case_class(test_case_name)]
-        return [
-            self._make_function_test_case(test_case_class, test_case_name=test_case_name, args=args, kwargs=kwargs)
-            for args, kwargs in parameter_specs.iterate_args_kwargs()
-            ]
-    def _make_function_test_case(self, test_case_class, test_case_name, args, kwargs):
-        test_case_instance = test_case_class(test_case_name)
-        return unittest.FunctionTestCase(
-            functools.partial(
-                getattr(test_case_instance, test_case_name),
-                *args,
-                **kwargs),
-            setUp=test_case_instance.setUp,
-            tearDown=test_case_instance.tearDown
-            )
+        for setup_args, setup_kwargs in self._iterate_setup(test_case_class):
+            for method_args, method_kwargs in parameter_specs.iterate_args_kwargs():
+                test_case = test_case_class(test_case_name)
+                setup_func = functools.partial(test_case.setUp, *setup_args, **setup_kwargs)
+                teardown_func = test_case.tearDown
+                method = functools.partial(
+                    getattr(test_case, test_case_name),
+                    *method_args,
+                    **method_kwargs
+                    )
+                yield unittest.FunctionTestCase(method, setUp=setup_func, tearDown=teardown_func)
+    def _iterate_setup(self, test_case_instance):
+        return get_parameter_spec(test_case_instance.setUp).iterate_args_kwargs()
 
 default_loader = TestLoader()
 get_test_cases_from_test_class = default_loader._get_test_cases

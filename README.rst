@@ -46,6 +46,68 @@ The above will construct one test case per possible value, thus separating the c
  ...     def test__some_api(self, a, b):
  ...         pass
 
+Fixture Parameters
+==================
+Sometimes you want to write a set of tests, where the *fixture* for running them needs to iterate over options. For instance, if we want to test a utility method over both old-style and new-style classes:
+::
+
+ >>> class OldStyle:
+ ...     pass
+ >>> class NewStyle(object):
+ ...     pass
+ >>> class TestOldStyle(TestCase):
+ ...     def setUp(self):
+ ...         super(TestOldStyle, self).setUp()
+ ...         self.tested_obj = OldStyle()
+ ...     def test__1(self):
+ ...         # do something with self.tested_obj
+ ...         pass
+ ...     def test__2(self):
+ ...         # do something with self.tested_obj
+ ...         pass
+ >>> class TestNewStyle(TestCase):
+ ...     def setUp(self):
+ ...         super(TestNewStyle, self).setUp()
+ ...         self.tested_obj = NewStyle()
+ ...     def test__1(self):
+ ...         # do something with self.tested_obj
+ ...         pass
+ ...     def test__2(self):
+ ...         # do something with self.tested_obj
+ ...         pass
+
+A somewher clever, although not very pretty, way of doing this is inheritance:
+
+ >>> class _BaseTest(TestCase):
+ ...     def test__1(self):
+ ...         # do something with self.tested_obj
+ ...         pass
+ ...     def test__2(self):
+ ...         # do something with self.tested_obj
+ ...         pass
+ >>> class OldStyleTest(_BaseTest):
+ ...     def setUp(self):
+ ...         super(OldStyleTest, self).setUp()
+ ...         self.tested_obj = OldStyle()
+ >>> class NewStyleTest(_BaseTest):
+ ...     def setUp(self):
+ ...         super(NewStyleTest, self).setUp()
+ ...         self.tested_obj = NewStyle()
+
+This is yucky, and some discovery methods will attempt to run _BaseTest as well (although prefixed with an underscore). *infi.unittest* solves this elegantly:
+
+ >>> class Test(TestCase):
+ ...     @parameters.iterate('obj', [NewStyle(), OldStyle()])
+ ...     def setUp(self, obj):
+ ...         super(Test, self).setUp()
+ ...         self.tested_obj = obj
+ ...     def test__1(self):
+ ...         # do something with self.tested_obj
+ ...         pass
+ ...     def test__2(self):
+ ...         # do something with self.tested_obj
+ ...         pass
+
 Nose Integration
 ================
 *infi.unittest* breaks compatibility with the excellent `nose: <http://code.google.com/p/python-nose/>` tool, itprovides a plugin to restore that compatibility. Running nose with the **--with-infi** option will make it properly process infi unittests. Of course this isn't needed if you're not using any of the features added by infi.
