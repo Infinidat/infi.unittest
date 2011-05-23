@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-__version__ = "0.0.3"
+from .__version__ import __version__
 from .case import TestCase
 from .loader import TestLoader
 from .result import TestResult

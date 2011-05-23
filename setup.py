@@ -2,7 +2,8 @@ import os
 import itertools
 from setuptools import setup, find_packages
 
-from infi.unittest import __version__ as VERSION
+with open(os.path.join(os.path.dirname(__file__), "infi", "unittest", "__version__.py"), "rb") as version_file:
+    exec version_file.read()
 
 setup(name="infi.unittest",
       classifiers = [
@@ -15,7 +16,7 @@ setup(name="infi.unittest",
       #license="Proprietary",
       author="Rotem Yaari",
       author_email="",
-      version=VERSION,
+      version=__version__,
       packages=find_packages(exclude=["tests"]),
       napespace_packages=["infi"],
       install_requires=[],
