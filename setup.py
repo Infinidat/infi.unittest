@@ -19,7 +19,7 @@ setup(name="infi.unittest",
       version=__version__,
       packages=find_packages(exclude=["tests"]),
       napespace_packages=["infi"],
-      install_requires=[],
+      install_requires=["pyforge"],
       scripts=[],
       entry_points = {
             'nose.plugins.0.10': [
