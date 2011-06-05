@@ -2,6 +2,7 @@ from __future__ import absolute_import
 import functools
 import unittest
 from .parameters import get_parameter_spec
+from .parameterized_test_case import ParameterizedTestCase
 
 class TestLoader(unittest.TestLoader):
     def loadTestsFromTestCase(self, testCaseClass):
@@ -24,14 +25,8 @@ class TestLoader(unittest.TestLoader):
         for setup_args, setup_kwargs in self._iterate_setup(test_case_class):
             for method_args, method_kwargs in parameter_specs.iterate_args_kwargs():
                 test_case = test_case_class(test_case_name)
-                setup_func = functools.partial(test_case.setUp, *setup_args, **setup_kwargs)
-                teardown_func = test_case.tearDown
-                method = functools.partial(
-                    getattr(test_case, test_case_name),
-                    *method_args,
-                    **method_kwargs
-                    )
-                yield unittest.FunctionTestCase(method, setUp=setup_func, tearDown=teardown_func)
+                yield ParameterizedTestCase(test_case, setup_args, setup_kwargs,
+                                            test_case_name, method_args, method_kwargs)
     def _iterate_setup(self, test_case_instance):
         return get_parameter_spec(test_case_instance.setUp).iterate_args_kwargs()
 
