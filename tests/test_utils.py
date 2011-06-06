@@ -1,5 +1,8 @@
+import os
 import itertools
 from infi.unittest import TestCase as InfiTestCase
+from infi.unittest import TestLoader
+from infi.unittest import TestResult
 from infi.unittest.parameters import iterate
 
 class Validator(object):
@@ -25,3 +28,15 @@ def get_test_and_validator():
         def test(self, number1, number2):
             validator.expected.remove((self.prefix, number1, number2))
     return ReturnedTest, validator
+
+def get_sample_package_root():
+    return os.path.join(os.path.dirname(__file__), "..", "sample_test_packages")
+
+def run_suite_assert_success(suite, num_tests):
+    result = TestResult()
+    suite.run(result)
+    assert not result.failures
+    assert not result.errors
+    assert not result.skipped
+    assert result.testsRun == num_tests
+    return result

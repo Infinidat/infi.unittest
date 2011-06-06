@@ -1,5 +1,6 @@
 import unittest
 from infi.unittest import TestCase, TestLoader, parameters, TestResult
+from test_utils import run_suite_assert_success
 
 class ParametersTest(unittest.TestCase):
     def test__parameters(self):
@@ -16,11 +17,6 @@ class ParametersTest(unittest.TestCase):
             def test__no_params(self):
                 executed.append((None, None))
         suite = TestLoader().loadTestsFromTestCase(SampleTest)
-        result = TestResult()
-        suite.run(result)
-        self.assertEquals(suite.countTestCases(), len(expected))
-        self.assertEquals(len(result.failures), 0)
-        self.assertEquals(len(result.errors), 0)
-        self.assertEquals(result.testsRun, len(expected))
+        run_suite_assert_success(suite, len(expected))
         self.assertEquals(set(expected), set(executed))
 

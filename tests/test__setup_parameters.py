@@ -1,5 +1,6 @@
 import unittest
 from infi.unittest import parameters, TestLoader
+from test_utils import run_suite_assert_success
 
 class SetupParametersTest(unittest.TestCase):
     def test__setup_parameters(self):
@@ -14,5 +15,5 @@ class SetupParametersTest(unittest.TestCase):
                 called.append(self.value)
         suite = TestLoader().loadTestsFromTestCase(T)
         self.assertEquals(suite.countTestCases(), len(values))
-        suite.run(unittest.TestResult())
+        run_suite_assert_success(suite, len(values))
         self.assertItemsEqual(values, called)

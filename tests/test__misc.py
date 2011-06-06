@@ -1,4 +1,5 @@
 import unittest
+from test_utils import run_suite_assert_success
 
 class TestImportsFromUnittestStillWork(unittest.TestCase):
     def test__imports_still_work(self):
@@ -23,12 +24,7 @@ class TestBackwardCompatibility(unittest.TestCase):
             def test__c(self):
                 run.append('c')
         suite = unittest.TestLoader().loadTestsFromTestCase(SampleTest)
-        result = unittest.TestResult()
-        suite.run(result)
-        self.assertEquals(result.failures, [])
-        self.assertEquals(result.errors, [])
-        self.assertEquals(result.testsRun, 3)
-        self.assertEquals(set(run), set(expected))
+        result = run_suite_assert_success(suite, 3)
     def test__is_subclass_of_unittest_testcase(self):
         from infi.unittest import TestCase
         self.assertTrue(issubclass(TestCase, unittest.TestCase))
