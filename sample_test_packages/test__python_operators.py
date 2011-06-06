@@ -12,3 +12,7 @@ class EqualityTest(TestCase):
     @parameters.iterate('b', [3, 'a', None])
     def test__inequality(self, b):
         self.assertNotEquals(self.a, b)
+
+class GreaterThanTest(TestCase):
+    def test__greater_than(self):
+        self.assertGreater(2, 1)

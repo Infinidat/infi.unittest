@@ -11,6 +11,7 @@ class ParameterizedTestCase(unittest.FunctionTestCase):
         self._method_name = method_name
         self._method_args = method_args
         self._method_kwargs = method_kwargs
+        self._test_case = test_case
         self._test_case_name = test_case.__class__.__name__
     def __repr__(self):
         return "<{0}[{1}].{2}({3})>".format(

@@ -1,9 +1,12 @@
 import os
 import itertools
+import unittest
 from infi.unittest import TestCase as InfiTestCase
 from infi.unittest import TestLoader
 from infi.unittest import TestResult
 from infi.unittest.parameters import iterate
+from infi.unittest.parameters import get_parameter_spec
+from infi.unittest.parameters import NO_SPECS
 
 class Validator(object):
     def __init__(self, expected):
@@ -38,5 +41,25 @@ def run_suite_assert_success(suite, num_tests):
     assert not result.failures
     assert not result.errors
     assert not result.skipped
-    assert result.testsRun == num_tests
+    assert result.testsRun == num_tests, "{0} tests expected to run, but {1} actually run!".format(num_tests, result.testsRun)
     return result
+
+def count_number_of_cases_in_directory(path):
+    suite = unittest.TestLoader().discover(path)
+    return _count_number_of_cases_in_suite(suite)
+
+def _count_number_of_cases_in_suite(suite):
+    returned = 0
+    for test in suite._tests:
+        if isinstance(test, unittest.TestSuite):
+            returned += _count_number_of_cases_in_suite(test)
+        else:
+            num_setup_cases = _count_cases_in_method(test.setUp)
+            num_method_cases = _count_cases_in_method(getattr(test, test._testMethodName))
+            returned += num_setup_cases * num_method_cases
+    return returned
+def _count_cases_in_method(method):
+    returned = get_parameter_spec(method)
+    if returned is NO_SPECS:
+        return 1
+    return len(list(returned.iterate_args_kwargs()))

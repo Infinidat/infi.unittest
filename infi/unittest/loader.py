@@ -3,8 +3,12 @@ import functools
 import unittest
 from .parameters import get_parameter_spec
 from .parameterized_test_case import ParameterizedTestCase
+from .test_filter import TestFilter
 
 class TestLoader(unittest.TestLoader):
+    def discover(self, *args, **kwargs):
+        test_filter = TestFilter.parse_filters(kwargs.pop('filters', None))
+        return test_filter.filter(super(TestLoader, self).discover(*args, **kwargs))
     def loadTestsFromTestCase(self, testCaseClass):
         return self.suiteClass(self._get_test_cases(testCaseClass))
     def _get_test_cases(self, test_case_class):
