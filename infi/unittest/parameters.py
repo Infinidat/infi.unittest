@@ -14,8 +14,8 @@ def get_or_create_parameter_specs(function):
     return returned
 
 class _NO_SPECS(object):
-    def iterate_args_kwargs(self):
-        return [((), {})]
+    def iterate_kwargs(self):
+        return [{}]
 NO_SPECS = _NO_SPECS()
 
 class ParameterSpecs(object):
@@ -24,18 +24,18 @@ class ParameterSpecs(object):
         self._params = {}
     def add_range(self, name, options):
         self._params.setdefault(name, []).extend(options)
-    def iterate_args_kwargs(self):
+    def iterate_kwargs(self):
         items = list(self._params.iteritems())
-        return self._iterate_args_kwargs(items)
-    def _iterate_args_kwargs(self, args_and_options):
+        return self._iterate_kwargs(items)
+    def _iterate_kwargs(self, args_and_options):
         if not args_and_options:
             return
         if len(args_and_options) == 1:
             for option in args_and_options[0][1]:
-                yield (), {args_and_options[0][0]:option}
+                yield {args_and_options[0][0]:option}
         else:
             arg_name, options = args_and_options[0]
             for option in options:
-                for args, kwargs in self._iterate_args_kwargs(args_and_options[1:]):
+                for kwargs in self._iterate_kwargs(args_and_options[1:]):
                     kwargs[arg_name] = option
-                    yield args, kwargs
+                    yield kwargs

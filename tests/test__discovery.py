@@ -16,7 +16,6 @@ class TestDiscoveryTest(unittest.TestCase):
             2 * (3 + 3)
             )
     def test__discovery_by_parameters(self):
-        raise unittest.SkipTest()
         run_suite_assert_success(
             TestLoader().discover(get_sample_package_root(),
                                   filters=["test__python_operators:EqualityTest[a=2].test__inequality[b=None]"]),

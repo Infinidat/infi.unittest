@@ -26,13 +26,13 @@ class TestLoader(unittest.TestLoader):
     def _multiply_test_case_parameters(self, test_case_class, test_case_name):
         method = getattr(test_case_class, test_case_name)
         parameter_specs = get_parameter_spec(method)
-        for setup_args, setup_kwargs in self._iterate_setup(test_case_class):
-            for method_args, method_kwargs in parameter_specs.iterate_args_kwargs():
+        for setup_kwargs in self._iterate_setup(test_case_class):
+            for method_kwargs in parameter_specs.iterate_kwargs():
                 test_case = test_case_class(test_case_name)
-                yield ParameterizedTestCase(test_case, setup_args, setup_kwargs,
-                                            test_case_name, method_args, method_kwargs)
+                yield ParameterizedTestCase(test_case, setup_kwargs,
+                                            test_case_name, method_kwargs)
     def _iterate_setup(self, test_case_instance):
-        return get_parameter_spec(test_case_instance.setUp).iterate_args_kwargs()
+        return get_parameter_spec(test_case_instance.setUp).iterate_kwargs()
 
 default_loader = TestLoader()
 get_test_cases_from_test_class = default_loader._get_test_cases

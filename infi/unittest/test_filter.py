@@ -36,6 +36,8 @@ class ModuleClassMethodFilter(TestFilter):
             ('module_name', self._get_test_module_name),
             ('class_name', self._get_test_class_name),
             ('method_name', self._get_test_method_name),
+            ('setup_args', self._get_test_setup_args),
+            ('method_args', self._get_test_method_args),
             ]:
             filter_value = self._filter_args[field_name]
             if filter_value is None:
@@ -52,7 +54,17 @@ class ModuleClassMethodFilter(TestFilter):
             return test._test_case.__class__
         return test.__class__
     def _get_test_method_name(self, test):
-        raise NotImplementedError()
+        if isinstance(test, ParameterizedTestCase):
+            return test._method_name
+        return test._testMethodName
+    def _get_test_setup_args(self, test):
+        if isinstance(test, ParameterizedTestCase):
+            return test._setup_kwargs
+        return {}
+    def _get_test_method_args(self, test):
+        if isinstance(test, ParameterizedTestCase):
+            return test._method_kwargs
+        return {}
 
 class OrFilter(TestFilter):
     def __init__(self, filters):
