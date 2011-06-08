@@ -14,9 +14,17 @@ class TestImportsFromUnittestStillWork(unittest.TestCase):
 class TestBackwardCompatibility(unittest.TestCase):
     def test__is_backwards_compatible(self):
         from infi.unittest import TestCase
-        expected = ['a', 'b', 'c']
+        expected = reduce(list.__add__,
+                          (['setup', x, 'teardown'] for x in 'abc'),
+                          [])
         run = []
         class SampleTest(TestCase):
+            def setUp(self):
+                super(SampleTest, self).setUp()
+                run.append('setup')
+            def tearDown(self):
+                run.append('teardown')
+                super(SampleTest, self).tearDown()
             def test__a(self):
                 run.append('a')
             def test__b(self):
