@@ -1,7 +1,18 @@
+import itertools
+import functools
+
 def iterate(argument_name, options):
     def _decorator(func):
-        get_or_create_parameter_specs(func).add_range(argument_name, options)
-        return func
+        spec, created = get_or_create_parameter_specs(func)
+        spec.add_range(argument_name, options)
+        if created:
+            @functools.wraps(func)
+            def new_func(self):
+                params = self._get_parameter_binding(spec.id)
+                return func(self, **params)
+        else:
+            new_func = func
+        return new_func
     return _decorator
 
 def get_parameter_spec(function):
@@ -9,19 +20,28 @@ def get_parameter_spec(function):
 
 def get_or_create_parameter_specs(function):
     returned = get_parameter_spec(function)
+    created = False
     if returned is NO_SPECS:
+        created = True
         returned = function.__infi_unittest_specs__ = ParameterSpecs()
-    return returned
+    return returned, created
+
+NO_SPEC_ID = None
 
 class _NO_SPECS(object):
+    id = NO_SPEC_ID
     def iterate_kwargs(self):
         return [{}]
 NO_SPECS = _NO_SPECS()
+
+
+_id_counter = itertools.count()
 
 class ParameterSpecs(object):
     def __init__(self):
         super(ParameterSpecs, self).__init__()
         self._params = {}
+        self.id = next(_id_counter)
     def add_range(self, name, options):
         self._params.setdefault(name, []).extend(options)
     def iterate_kwargs(self):

@@ -2,7 +2,7 @@ from ast import literal_eval
 import re
 import bunch
 import unittest
-from .parameterized_test_case import ParameterizedTestCase
+from .case import TestCase as InfiTestCase
 from .filter_syntax import FILTER_STRING_PATTERN
 
 class TestFilter(object):
@@ -50,20 +50,16 @@ class ModuleClassMethodFilter(TestFilter):
     def _get_test_class_name(self, test):
         return self._get_test_class(test).__name__
     def _get_test_class(self, test):
-        if isinstance(test, ParameterizedTestCase):
-            return test._test_case.__class__
         return test.__class__
     def _get_test_method_name(self, test):
-        if isinstance(test, ParameterizedTestCase):
-            return test._method_name
         return test._testMethodName
     def _get_test_setup_args(self, test):
-        if isinstance(test, ParameterizedTestCase):
-            return test._setup_kwargs
+        if isinstance(test, InfiTestCase):
+            return test._get_setup_kwargs()
         return {}
     def _get_test_method_args(self, test):
-        if isinstance(test, ParameterizedTestCase):
-            return test._method_kwargs
+        if isinstance(test, InfiTestCase):
+            return test._get_method_kwargs()
         return {}
 
 class OrFilter(TestFilter):

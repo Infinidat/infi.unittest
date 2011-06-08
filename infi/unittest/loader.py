@@ -2,8 +2,9 @@ from __future__ import absolute_import
 import functools
 import unittest
 from .parameters import get_parameter_spec
-from .parameterized_test_case import ParameterizedTestCase
+from .parameters import NO_SPECS
 from .test_filter import TestFilter
+from .case import TestCase as InfiTestCase
 
 class TestLoader(unittest.TestLoader):
     def discover(self, *args, **kwargs):
@@ -21,18 +22,17 @@ class TestLoader(unittest.TestLoader):
     def _get_test_cases_by_names(self, test_case_class, test_case_names):
         returned = []
         for test_case_name in test_case_names:
-            returned.extend(self._multiply_test_case_parameters(test_case_class, test_case_name))
+            returned.extend(self._get_multipled_cases(test_case_class, test_case_name))
         return returned
-    def _multiply_test_case_parameters(self, test_case_class, test_case_name):
-        method = getattr(test_case_class, test_case_name)
-        parameter_specs = get_parameter_spec(method)
-        for setup_kwargs in self._iterate_setup(test_case_class):
-            for method_kwargs in parameter_specs.iterate_kwargs():
-                test_case = test_case_class(test_case_name)
-                yield ParameterizedTestCase(test_case, setup_kwargs,
-                                            test_case_name, method_kwargs)
-    def _iterate_setup(self, test_case_instance):
-        return get_parameter_spec(test_case_instance.setUp).iterate_kwargs()
+    def _get_multipled_cases(self, test_case_class, test_case_name):
+        if issubclass(test_case_class, InfiTestCase):
+            return test_case_class._get_all_cases(test_case_name)
+        return [test_case_class(test_case_name)]
+    def _iterate_setups(self, test_case_class):
+        spec = get_parameter_spec(test_case_class.setUp)
+        if spec is NO_SPECS:
+            return [[]]
+        return [[(spec.id, kwargs)] for kwargs in spec.iterate_kwargs()]
 
 default_loader = TestLoader()
 get_test_cases_from_test_class = default_loader._get_test_cases
