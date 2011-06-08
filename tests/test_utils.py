@@ -54,10 +54,20 @@ def _count_number_of_cases_in_suite(suite):
         if isinstance(test, unittest.TestSuite):
             returned += _count_number_of_cases_in_suite(test)
         else:
-            num_setup_cases = _count_cases_in_method(test.setUp)
+            num_setup_cases = _count_setups(test)
             num_method_cases = _count_cases_in_method(getattr(test, test._testMethodName))
             returned += num_setup_cases * num_method_cases
     return returned
+
+def _count_setups(test):
+    returned = 1
+    for cls in test.__class__.__mro__:
+        setup = getattr(cls, "setUp", None)
+        if setup is None:
+            continue
+        returned *= _count_cases_in_method(setup)
+    return returned
+
 def _count_cases_in_method(method):
     returned = get_parameter_spec(method)
     if returned is NO_SPECS:

@@ -108,6 +108,24 @@ This is yucky, and some discovery methods will attempt to run _BaseTest as well 
  ...         # do something with self.tested_obj
  ...         pass
 
+infi.unittest can even multiply across inheritence. This means that the following code will eventually test the cartesian product between [1, 2, 3] and [4, 5, 6]
+::
+
+ >>> class BaseTest(TestCase):
+ ...     @parameters.iterate('param', [1, 2, 3])
+ ...     def setUp(self, param):
+ ...         super(BaseTest, self).setUp()
+ ...         self.base_param = param
+ >>> class DerivedTest(BaseTest):
+ ...     @parameters.iterate('param', [4, 5, 6])
+ ...     def setUp(self, param):
+ ...         super(DerivedTest, self).param()
+ ...         self.derived_param = param
+ ...     def test(self):
+ ...         self.do_something_with(self.base_param, self.derived_param)
+
+Note that even the super() call to setUp doesn't need to bother with the parameter(s) - it gets automatically bound.
+ 
 Nose Integration
 ================
 *infi.unittest* breaks compatibility with the excellent `nose: <http://code.google.com/p/python-nose/>` tool, itprovides a plugin to restore that compatibility. Running nose with the **--with-infi** option will make it properly process infi unittests. Of course this isn't needed if you're not using any of the features added by infi.

@@ -34,12 +34,22 @@ class TestCase(unittest.TestCase):
                 yield test_case
     @classmethod
     def _get_setup_assignment_specs(cls):
-        setup_func = cls.setUp
-        spec = get_parameter_spec(setup_func)
-        return [
-            [(spec.id, kwargs)]
-            for kwargs in spec.iterate_kwargs()
-            ]
+        setup_specs = [get_parameter_spec(setup)
+                       for setup in cls._get_setups()]
+        setup_specs_kwargs_sets = [list(spec.iterate_kwargs()) for spec in setup_specs]
+        combinations = itertools.product(*setup_specs_kwargs_sets)
+
+        for combination in combinations:
+            yield [(setup_spec.id, kwargs) for setup_spec, kwargs in zip(setup_specs, combination)]
+    @classmethod
+    def _get_setups(cls):
+        returned = []
+        for c in cls.__mro__:
+            setup = getattr(c, "setUp", None)
+            if setup is None:
+                continue
+            returned.append(setup)
+        return returned
     @classmethod
     def _get_method_assignment_specs(cls, method_name):
         method = getattr(cls, method_name)
