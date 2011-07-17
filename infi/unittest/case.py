@@ -59,7 +59,8 @@ class TestCase(unittest.TestCase):
             for kwargs in spec.iterate_kwargs()
             ]
     def __repr__(self):
-        return "<{0}[{1}].{2}({3})>".format(
+        return "<{0}.{1}[{2}].{3}({4})>".format(
+            self.__class__.__module__,
             self.__class__.__name__,
             self._get_kwargs_str(self._get_setup_kwargs()),
             self._testMethodName,

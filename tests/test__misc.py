@@ -39,22 +39,4 @@ class TestBackwardCompatibility(unittest.TestCase):
         from infi.unittest import TestCase
         self.assertTrue(issubclass(TestCase, unittest.TestCase))
 
-class RepresentationTest(unittest.TestCase):
-    def test__represnetation(self):
-        class DummyTest(InfiTestCase):
-            @parameters.iterate('x', [1, 2, 3])
-            def setUp(self, x):
-                super(DummyTest, self).setUp()
-                self.x = x
-            @parameters.iterate('y', [1, 2, 3])
-            def test__something(self, y):
-                raise NotImplementedError() # pragma: no cover
-        loader = InfiTestLoader()
-        suite = loader.loadTestsFromTestCase(DummyTest)
-        self.assertEquals(suite.countTestCases(), 9)
-        for case in suite:
-            self.assertIsInstance(str(case), basestring)
-            self.assertIsInstance(repr(case), basestring)
-            import pdb
-            pdb.set_trace()
 
