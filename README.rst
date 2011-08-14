@@ -46,6 +46,13 @@ The above will construct one test case per possible value, thus separating the c
  ...     def test__some_api(self, a, b):
  ...         pass
 
+For boolean flags, there exists a simpler way to iterate between options::
+
+ >>> class MyTest(TestCase):
+ ...     @parameters.toggle('a', 'b', 'c')
+ ...     def test__something(self, a, b, c):
+ ...         pass # will be called with all combinations of True/False for a, b, c
+ 
 Fixture Parameters
 ==================
 Sometimes you want to write a set of tests, where the *fixture* for running them needs to iterate over options. For instance, if we want to test a utility method over both old-style and new-style classes:

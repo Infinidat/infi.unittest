@@ -25,6 +25,15 @@ class ParametersTest(unittest.TestCase):
         suite = TestLoader().loadTestsFromTestCase(SampleTest)
         run_suite_assert_success(suite, len(expected))
         self.assertEquals(expected, executed)
+    def test__toggle(self):
+        expected = set((x, y) for x in [True, False] for y in [True, False])
+        executed = set()
+        class SampleTest(TestCase):
+            @parameters.toggle('a', 'b')
+            def test__parameters(self, a, b):
+                executed.add((a, b))
+        run_suite_assert_success(TestLoader().loadTestsFromTestCase(SampleTest), len(expected))
+        self.assertEquals(expected, executed)
 
 class SetupParametersAcrossInheritenceTest(unittest.TestCase):
     def test__inheritence(self):

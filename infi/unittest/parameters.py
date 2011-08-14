@@ -15,6 +15,13 @@ def iterate(argument_name, options):
         return new_func
     return _decorator
 
+def toggle(*names):
+    def _decorator(func):
+        for name in names:
+            func = iterate(name, [True, False])(func)
+        return func
+    return _decorator
+
 def get_parameter_spec(function):
     return getattr(function, "__infi_unittest_specs__", NO_SPECS)
 
