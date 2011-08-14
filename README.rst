@@ -46,6 +46,15 @@ The above will construct one test case per possible value, thus separating the c
  ...     def test__some_api(self, a, b):
  ...         pass
 
+Iteration can be done over functions (or any callable object) that returns the sequence to iterate over::
+
+ >>> def get_options():
+ ...     return [1, 2, 3]
+ >>> class MyTest(TestCase):
+ ...     @parameters.iterate('a', get_options)
+ ...     def test__something(self, a):
+ ...         pass
+ 
 For boolean flags, there exists a simpler way to iterate between options::
 
  >>> class MyTest(TestCase):

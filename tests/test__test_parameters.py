@@ -34,6 +34,22 @@ class ParametersTest(unittest.TestCase):
                 executed.add((a, b))
         run_suite_assert_success(TestLoader().loadTestsFromTestCase(SampleTest), len(expected))
         self.assertEquals(expected, executed)
+    def test__iterate_over_callable(self):
+        sequence = range(10)
+        expected = set(sequence)
+        executed = set()
+        already_called = {"value" : False}
+        def get_sequence():
+            assert not already_called['value']
+            already_called['value'] = True
+            return sequence
+        class SampleTest(TestCase):
+            @parameters.iterate('x', get_sequence)
+            def test__x(self, x):
+                executed.add(x)
+        self.assertFalse(already_called['value'])
+        run_suite_assert_success(TestLoader().loadTestsFromTestCase(SampleTest), len(expected))
+        self.assertEquals(executed, expected)
 
 class SetupParametersAcrossInheritenceTest(unittest.TestCase):
     def test__inheritence(self):

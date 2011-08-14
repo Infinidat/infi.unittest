@@ -1,5 +1,6 @@
 import itertools
 import functools
+from collections import defaultdict
 
 def iterate(argument_name, options):
     def _decorator(func):
@@ -39,18 +40,18 @@ class _NO_SPECS(object):
     id = NO_SPEC_ID
     def iterate_kwargs(self):
         return [{}]
-NO_SPECS = _NO_SPECS()
 
+NO_SPECS = _NO_SPECS()
 
 _id_counter = itertools.count()
 
 class ParameterSpecs(object):
     def __init__(self):
         super(ParameterSpecs, self).__init__()
-        self._params = {}
+        self._params = defaultdict(OptionList)
         self.id = next(_id_counter)
     def add_range(self, name, options):
-        self._params.setdefault(name, []).extend(options)
+        self._params[name].add_range(options)
     def iterate_kwargs(self):
         items = list(self._params.iteritems())
         return self._iterate_kwargs(items)
@@ -66,3 +67,25 @@ class ParameterSpecs(object):
                 for kwargs in self._iterate_kwargs(args_and_options[1:]):
                     kwargs[arg_name] = option
                     yield kwargs
+
+class OptionList(object):
+    def __init__(self):
+        super(OptionList, self).__init__()
+        self._ranges = []
+    def add_range(self, range):
+        self._ranges.append(range)
+    def __iter__(self):
+        for option_list in self._ranges:
+            if hasattr(option_list, "__call__"):
+                option_list = option_list()
+            for option in option_list:
+                yield option
+    def __repr__(self):
+        return "[{}]".format(", ".join(map(repr, self._get_repr_items())))
+    def _get_repr_items(self):
+        for option_list in self._ranges:
+            if hasattr(option_list, "__call__"):
+                yield option_list
+            else:
+                for x in option_list:
+                    yield x
