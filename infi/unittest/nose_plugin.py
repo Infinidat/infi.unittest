@@ -7,6 +7,9 @@ class NosePlugin(Plugin):
     name = "infi"
     enabled = True
     score = 0
+    def configure(self, options, conf):
+        super(NosePlugin, self).configure(options, conf)
+        self.enabled = True
     def prepareTestLoader(self, loader):
         loader.loadTestsFromTestCase = self._get_patched_test_case_loader(loader)
     def _get_patched_test_case_loader(self, loader):

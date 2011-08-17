@@ -144,4 +144,4 @@ Note that even the super() call to setUp doesn't need to bother with the paramet
  
 Nose Integration
 ================
-*infi.unittest* breaks compatibility with the excellent `nose: <http://code.google.com/p/python-nose/>` tool, itprovides a plugin to restore that compatibility. Running nose with the **--with-infi** option will make it properly process infi unittests. Of course this isn't needed if you're not using any of the features added by infi.
+*infi.unittest* breaks compatibility with the excellent `nose: <http://code.google.com/p/python-nose/>` tool, so it provides a nose plugin to handle with its tests. The plugin is automatically enabled for you, so you don't have to pass the --with-infi flag to nosetests.
