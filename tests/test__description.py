@@ -21,8 +21,8 @@ class TestDescriptionTest(unittest.TestCase):
         loader = TestLoader()
         suite = loader.loadTestsFromTestCase(MyTest)
         test = suite._tests[0]
-        self.assertEquals(str(test), repr(test))
-        self.assertEquals(str(test), "<test__description.MyTest[a=1].test(b=4)>")
+        self.assertEquals("<test__description.{0}>".format(test), repr(test))
+        self.assertEquals(str(test), "MyTest(a=1).test(b=4)")
 
 class TestInformationTest(unittest.TestCase):
     def setUp(self):

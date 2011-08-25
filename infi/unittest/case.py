@@ -76,15 +76,20 @@ class TestCase(unittest.TestCase):
             for kwargs in spec.iterate_kwargs()
             ]
     def __repr__(self):
-        return "<{0}.{1}[{2}].{3}({4})>".format(
-            self.__class__.__module__,
-            self.__class__.__name__,
-            self._get_kwargs_str(self._get_setup_kwargs()),
-            self._testMethodName,
-            self._get_kwargs_str(self._get_method_kwargs()),
-            )
+        return "<{0}.{1}>".format(self.get_module_full_name(), self)
     def __str__(self):
-        return repr(self)
+        returned = self.get_class_name()
+        setup_kwargs = self._get_setup_kwargs()
+        return "{0}{1}.{2}{3}".format(
+            self.get_class_name(),
+            self._get_kwargs_str_if_not_empty(self._get_setup_kwargs()),
+            self.get_method_name(),
+            self._get_kwargs_str_if_not_empty(self._get_method_kwargs()),
+            )
+    def _get_kwargs_str_if_not_empty(self, kwargs):
+        if not kwargs:
+            return ""
+        return "({0})".format(self._get_kwargs_str(kwargs))
     def _get_kwargs_str(self, kwargs):
         return ', '.join(
             "{0}={1!r}".format(key, value) for key, value in iteritems(kwargs)
