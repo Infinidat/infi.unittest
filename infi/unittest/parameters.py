@@ -1,6 +1,7 @@
 import itertools
 import functools
 from collections import defaultdict
+from .python3_compat import items_list
 
 def iterate(argument_name, options):
     def _decorator(func):
@@ -53,7 +54,7 @@ class ParameterSpecs(object):
     def add_range(self, name, options):
         self._params[name].add_range(options)
     def iterate_kwargs(self):
-        items = list(self._params.iteritems())
+        items = items_list(self._params)
         return self._iterate_kwargs(items)
     def _iterate_kwargs(self, args_and_options):
         if not args_and_options:
@@ -81,7 +82,7 @@ class OptionList(object):
             for option in option_list:
                 yield option
     def __repr__(self):
-        return "[{}]".format(", ".join(map(repr, self._get_repr_items())))
+        return "[{0}]".format(", ".join(map(repr, self._get_repr_items())))
     def _get_repr_items(self):
         for option_list in self._ranges:
             if hasattr(option_list, "__call__"):

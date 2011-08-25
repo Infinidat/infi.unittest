@@ -4,6 +4,7 @@ import bunch
 import unittest
 from .case import TestCase as InfiTestCase
 from .filter_syntax import FILTER_STRING_PATTERN
+from .python3_compat import basestring
 
 class TestFilter(object):
     @classmethod

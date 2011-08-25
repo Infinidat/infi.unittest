@@ -1,34 +1,18 @@
 from __future__ import absolute_import
+import platform
 from .__version__ import __version__
+if platform.python_version() < '2.7':
+    import unittest2 as _unittest
+else:
+    import unittest as _unittest
+
+_available_from_original = _unittest.__all__
+globals().update((name, getattr(_unittest, name)) for name in _available_from_original if not name.startswith("_"))
+
+from . import parameters
 from .case import TestCase
 from .loader import TestLoader
 from .result import TestResult
 
 defaultTestLoader = TestLoader
 
-
-#verbatim imports from unittest
-from unittest import __all__ as _available_from_original
-
-from unittest import (
-    FunctionTestCase,
-    SkipTest,
-    TestSuite,
-    TextTestResult,
-    TextTestRunner,
-    expectedFailure,
-    findTestCases,
-    getTestCaseNames,
-    installHandler,
-    main,
-    makeSuite,
-    registerResult,
-    removeHandler,
-    removeResult,
-    skip,
-    skipIf,
-    skipUnless,
-    )
-
-__all__ = list(_available_from_original)
-__all__.extend(['params'])

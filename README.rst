@@ -2,6 +2,8 @@ Introduction
 ------------
 *infi.unittest* is a set of extensions for the standard *unittest* module provided by the Python standard library. It provides several improvements over the original implementation, described below.
 
+.. note:: infi.unittest does not support Python 2.6 and below, due to the major overhaul in the *unittest* module that took place in 2.7. Sorry.
+
 Installation
 ------------
 The installation is done in the ordinary way:

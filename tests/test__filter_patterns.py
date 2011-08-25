@@ -5,7 +5,7 @@ class TestFilterTest(unittest.TestCase):
     def _assert_matches(self, pattern, **fields):
         filter = TestFilter.parse_filters(pattern)
         filter_args = filter._filter_args
-        for key, value in filter_args.iteritems():
+        for key, value in filter_args.items():
             expected_value = fields.pop(key, None)
             self.assertEquals(value, expected_value)
         self.assertEquals(fields, {})

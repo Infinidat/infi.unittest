@@ -1,12 +1,10 @@
 from __future__ import absolute_import
 import itertools
 import platform
-if platform.python_version() < '2.7':
-    import unittest2 as unittest
-else:
-    import unittest
+import unittest
 from .parameters import get_parameter_spec
 from .parameters import NO_SPEC_ID
+from .python3_compat import iteritems
 
 class TestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
@@ -74,7 +72,7 @@ class TestCase(unittest.TestCase):
         return repr(self)
     def _get_kwargs_str(self, kwargs):
         return ', '.join(
-            "{0}={1!r}".format(key, value) for key, value in kwargs.iteritems()
+            "{0}={1!r}".format(key, value) for key, value in iteritems(kwargs)
             )
 
 

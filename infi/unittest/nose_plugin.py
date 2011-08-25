@@ -1,7 +1,7 @@
-from types import MethodType
 from nose.plugins.base import Plugin
 from nose.loader import TestLoader as NoseTestLoader
 from .loader import get_test_cases_from_test_class
+from .python3_compat import create_instance_method
 
 class NosePlugin(Plugin):
     name = "infi"
@@ -20,5 +20,5 @@ class NosePlugin(Plugin):
                 cases.append(case)
             cases.extend(get_test_cases_from_test_class(testCaseClass))
             return self.suiteClass(cases)
-        return MethodType(loadTestsFromTestCase, loader, type(loader))
+        return create_instance_method(loadTestsFromTestCase, loader)
 

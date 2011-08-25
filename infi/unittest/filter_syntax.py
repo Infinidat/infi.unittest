@@ -6,10 +6,10 @@ _IDENTITIFER = r"[a-zA-Z_][_0-9a-zA-Z]*"
 _MODULE_PATH = r"[\.a-zA-Z_][\._0-9a-zA-Z]*"
 
 def _REMEMBER(x, name):
-    return "(?P<{}>{})".format(name, x)
+    return "(?P<{0}>{1})".format(name, x)
 
 def _OPTIONAL(*x):
-    return "(?:{})?".format(''.join(x))
+    return "(?:{0})?".format(''.join(x))
 
 
 FILTER_STRING_RE = ''.join((

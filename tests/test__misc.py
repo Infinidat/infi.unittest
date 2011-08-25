@@ -1,4 +1,5 @@
 import unittest
+from infi.unittest.python3_compat import reduce
 from infi.unittest import TestCase as InfiTestCase
 from infi.unittest import TestLoader as InfiTestLoader
 from infi.unittest import parameters
@@ -9,7 +10,7 @@ class TestImportsFromUnittestStillWork(unittest.TestCase):
         from unittest import __all__ as available_from_unittest
         for name in available_from_unittest:
             try:
-                exec "from infi.unittest import {}".format(name)
+                exec("from infi.unittest import {0}".format(name))
             except ImportError:
                 self.fail("Name {!r} is not importable!".format(name))
 
