@@ -1,4 +1,5 @@
 from __future__ import absolute_import
+import sys
 import itertools
 import platform
 import unittest
@@ -10,6 +11,20 @@ class TestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestCase, self).__init__(*args, **kwargs)
         self._argument_bindings = {}
+    def get_method_name(self):
+        return self._testMethodName
+    def get_class_name(self):
+        return self.__class__.__name__
+    def get_module_base_name(self):
+        return self.get_module_full_name().rsplit(".", 1)[-1]
+    def get_module_full_name(self):
+        return self.__class__.__module__
+    def get_filename(self):
+        return sys.modules[self.__class__.__module__].__file__
+    def get_setup_parameters(self):
+        return self._get_setup_kwargs()
+    def get_parameters(self):
+        return self._get_method_kwargs()
     def _bind_parameters(self, spec_id, kwargs):
         if spec_id is NO_SPEC_ID:
             return
