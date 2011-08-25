@@ -1,6 +1,10 @@
 from __future__ import absolute_import
 import itertools
-import unittest
+import platform
+if platform.python_version() < '2.7':
+    import unittest2 as unittest
+else:
+    import unittest
 from .parameters import get_parameter_spec
 from .parameters import NO_SPEC_ID
 
