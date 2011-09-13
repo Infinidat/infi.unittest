@@ -72,4 +72,4 @@ def _count_cases_in_method(method):
     returned = get_parameter_spec(method)
     if returned is NO_SPECS:
         return 1
-    return len(list(returned.iterate_kwargs()))
+    return len(list(returned.iterate_calls()))

@@ -7,6 +7,7 @@ import unittest
 from infi.unittest import TestCase as InfiTestCase
 from infi.unittest import parameters
 from infi.unittest import TestLoader, TestResult
+from infi.unittest import Call
 
 class TestDescriptionTest(unittest.TestCase):
     def test__description(self):
@@ -51,8 +52,8 @@ class TestInformationTest(unittest.TestCase):
         [test] = TestLoader().loadTestsFromTestCase(Test)
         self.assertEquals(test.get_module_base_name(), 'module')
         self.assertEquals(test.get_module_full_name(), self.full_module_name)
-        self.assertEquals(test.get_setup_parameters(), {})
-        self.assertEquals(test.get_parameters(), {})
+        self.assertEquals(test.get_setup_call(), Call())
+        self.assertEquals(test.get_method_call(), Call())
         self.assertEquals(test.get_method_name(), 'test__a')
         self.assertEquals(test.get_class_name(), 'Test')
     def test__fields_of_parameterized_tests(self):
@@ -60,8 +61,8 @@ class TestInformationTest(unittest.TestCase):
         tests = TestLoader().loadTestsFromTestCase(ParameterizedTest)._tests
         self.assertEquals(len(tests), 9)
         test = tests[0]
-        self.assertEquals(test.get_setup_parameters(), dict(a=1))
-        self.assertEquals(test.get_parameters(), dict(b=1))
+        self.assertEquals(test.get_setup_call(), Call(a=1))
+        self.assertEquals(test.get_method_call(), Call(b=1))
         self.assertEquals(test.get_filename(), os.path.join(self.directory, *self.full_module_name.split('.')) + '.py')
         self.assertEquals(test.get_method_name(), 'test__a')
         self.assertEquals(test.get_class_name(), 'ParameterizedTest')

@@ -1,5 +1,6 @@
 import unittest
 from infi.unittest.test_filter import TestFilter
+from infi.unittest import Call
 
 class TestFilterTest(unittest.TestCase):
     def _assert_matches(self, pattern, **fields):
@@ -20,13 +21,13 @@ class TestFilterTest(unittest.TestCase):
         self._assert_matches("test__python_operators:EqualityTest[a=2].test__inequality[b=None]",
                              module_name="test__python_operators",
                              class_name="EqualityTest",
-                             setup_args=dict(a=2),
+                             setup_call=Call(a=2),
                              method_name="test__inequality",
-                             method_args=dict(b=None)
+                             method_call=Call(b=None)
                              )
         self._assert_matches("test__a:A[x=30].a[y=None]",
                              module_name="test__a",
                              class_name="A",
-                             setup_args={"x": 30},
+                             setup_call=Call(x=30),
                              method_name="a",
-                             method_args={"y": None})
+                             method_call=Call(y=None))

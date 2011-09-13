@@ -2,6 +2,7 @@ from ast import literal_eval
 import re
 import bunch
 import unittest
+from .call import EMPTY_CALL, Call
 from .case import TestCase as InfiTestCase
 from .filter_syntax import FILTER_STRING_PATTERN
 from .python3_compat import basestring
@@ -37,8 +38,8 @@ class ModuleClassMethodFilter(TestFilter):
             ('module_name', self._get_test_module_name),
             ('class_name', self._get_test_class_name),
             ('method_name', self._get_test_method_name),
-            ('setup_args', self._get_test_setup_args),
-            ('method_args', self._get_test_method_args),
+            ('setup_call', self._get_test_setup_call),
+            ('method_call', self._get_test_method_call),
             ]:
             filter_value = self._filter_args[field_name]
             if filter_value is None:
@@ -54,14 +55,14 @@ class ModuleClassMethodFilter(TestFilter):
         return test.__class__
     def _get_test_method_name(self, test):
         return test._testMethodName
-    def _get_test_setup_args(self, test):
+    def _get_test_setup_call(self, test):
         if isinstance(test, InfiTestCase):
-            return test._get_setup_kwargs()
-        return {}
-    def _get_test_method_args(self, test):
+            return test.get_setup_call()
+        return EMPTY_CALL
+    def _get_test_method_call(self, test):
         if isinstance(test, InfiTestCase):
-            return test._get_method_kwargs()
-        return {}
+            return test.get_method_call()
+        return EMPTY_CALL
 
 class OrFilter(TestFilter):
     def __init__(self, filters):
@@ -79,14 +80,33 @@ def _parse_filter_string(s):
     for key in returned:
         if not returned[key]:
             returned[key] = None
-    for key in ['method_args', 'setup_args']:
-        returned[key] = _parse_dict_filter(returned[key])
+    for key in ['method_call', 'setup_call']:
+        returned[key] = _parse_call_filter(returned[key])
     return returned
-def _parse_dict_filter(value):
+
+def _parse_call_filter(value):
     if value is None:
         return None
     assert value.startswith("[") and value.endswith("]")
-    return dict(
-        (key, literal_eval(value))
-        for key, value in (x.split("=", 1) for x in value[1:-1].split(","))
-        )
+    call_args = []
+    call_kwargs = {}
+    for arg_str in value[1:-1].split(","):
+        if "=" in arg_str:
+            key, value = arg_str.split("=", 1)
+            call_kwargs[key] = literal_eval(value)
+        else:
+            call_args.append(literal_eval(arg_str))
+            call_kwargs[arg_s]
+    return CallSubsetPredicate(Call(*call_args, **call_kwargs))
+
+class CallSubsetPredicate(object):
+    def __init__(self, call):
+        super(CallSubsetPredicate, self).__init__()
+        self.call = call
+    def __eq__(self, call):
+        if not isinstance(call, Call):
+            return False
+        return call.args[:len(self.call.args)] == call.args and \
+               all(call.kwargs[key] == value for key, value in self.call.kwargs.iteritems())
+    def __ne__(self, call):
+        return not self == call

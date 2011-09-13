@@ -1,7 +1,9 @@
+import logging
 import itertools
 import functools
 from collections import defaultdict
 from .python3_compat import items_list
+from .call import Call, EMPTY_CALL
 
 def iterate(argument_name, options):
     def _decorator(func):
@@ -10,8 +12,8 @@ def iterate(argument_name, options):
         if created:
             @functools.wraps(func)
             def new_func(self):
-                params = self._get_parameter_binding(spec.id)
-                return func(self, **params)
+                call = self._spec_call_bindings[spec.id]
+                return func(self, *call.args, **call.kwargs)
         else:
             new_func = func
         return new_func
@@ -39,8 +41,8 @@ NO_SPEC_ID = None
 
 class _NO_SPECS(object):
     id = NO_SPEC_ID
-    def iterate_kwargs(self):
-        return [{}]
+    def iterate_calls(self):
+        return [EMPTY_CALL]
 
 NO_SPECS = _NO_SPECS()
 
@@ -53,9 +55,12 @@ class ParameterSpecs(object):
         self.id = next(_id_counter)
     def add_range(self, name, options):
         self._params[name].add_range(options)
-    def iterate_kwargs(self):
+    def iterate_calls(self):
         items = items_list(self._params)
-        return self._iterate_kwargs(items)
+        for kwargs in self._iterate_kwargs(items):
+            call = Call(**kwargs)
+            logging.debug("Yielding %s", call)
+            yield call
     def _iterate_kwargs(self, args_and_options):
         if not args_and_options:
             return

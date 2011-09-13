@@ -19,13 +19,13 @@ FILTER_STRING_RE = ''.join((
         ":",
         _REMEMBER(_IDENTITIFER, "class_name"),
         _OPTIONAL(
-            _REMEMBER(_ARGS, "setup_args")
+            _REMEMBER(_ARGS, "setup_call")
             ),
         _OPTIONAL(
             ".",
             _REMEMBER(_IDENTITIFER, "method_name"),
             _OPTIONAL(
-                _REMEMBER(_ARGS, "method_args")
+                _REMEMBER(_ARGS, "method_call")
                 )
             )
         ),

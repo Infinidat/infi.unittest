@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import functools
+import logging
 import unittest
 from .parameters import get_parameter_spec
 from .parameters import NO_SPECS
@@ -32,7 +33,7 @@ class TestLoader(unittest.TestLoader):
         spec = get_parameter_spec(test_case_class.setUp)
         if spec is NO_SPECS:
             return [[]]
-        return [[(spec.id, kwargs)] for kwargs in spec.iterate_kwargs()]
+        return [[(spec.id, call)] for call in spec.iterate_calls()]
 
 default_loader = TestLoader()
 get_test_cases_from_test_class = default_loader._get_test_cases

@@ -11,6 +11,7 @@ globals().update((name, getattr(_unittest, name)) for name in _available_from_or
 
 from . import parameters
 from .case import TestCase
+from .call import Call
 from .loader import TestLoader
 from .result import TestResult
 
