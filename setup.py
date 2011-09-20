@@ -20,7 +20,7 @@ setup(name="infi.unittest",
       author_email="",
       version=__version__,
       packages=find_packages(exclude=["tests"]),
-      napespace_packages=["infi"],
+      namespace_packages=["infi"],
       install_requires=_REQUIREMENTS,
       scripts=[],
       entry_points = {
