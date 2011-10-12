@@ -5,7 +5,7 @@ import unittest
 from .call import EMPTY_CALL, Call
 from .case import TestCase as InfiTestCase
 from .filter_syntax import FILTER_STRING_PATTERN
-from .python3_compat import basestring
+from .python3_compat import basestring, iteritems
 
 class TestFilter(object):
     @classmethod
@@ -107,6 +107,6 @@ class CallSubsetPredicate(object):
         if not isinstance(call, Call):
             return False
         return call.args[:len(self.call.args)] == call.args and \
-               all(call.kwargs[key] == value for key, value in self.call.kwargs.iteritems())
+               all(call.kwargs[key] == value for key, value in iteritems(self.call.kwargs))
     def __ne__(self, call):
         return not self == call
