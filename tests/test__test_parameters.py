@@ -1,7 +1,7 @@
 import itertools
 import unittest
 from infi.unittest import TestCase, TestLoader, parameters, TestResult
-from test_utils import run_suite_assert_success
+from test_utils import run_suite_assert_success, run_suite
 
 class ParametersTest(unittest.TestCase):
     def test__parameters(self):
@@ -50,6 +50,17 @@ class ParametersTest(unittest.TestCase):
         self.assertFalse(already_called['value'])
         run_suite_assert_success(TestLoader().loadTestsFromTestCase(SampleTest), len(expected))
         self.assertEquals(executed, expected)
+
+class AccidentalUsageOnUnittestTest(unittest.TestCase):
+    def test__accidental_usage(self):
+        class MyTest(unittest.TestCase):
+            @parameters.iterate('bla', [1, 2, 3])
+            def test_1(self):
+                pass
+        result = run_suite(TestLoader().loadTestsFromTestCase(MyTest))
+        self.assertEquals(result.testsRun, 1)
+        self.assertEquals(len(result.errors), 1)
+        self.assertIn("does not derive from infi.unittest.testcase", result.errors[0][1].lower())
 
 class SetupParametersAcrossInheritenceTest(unittest.TestCase):
     def test__inheritence(self):

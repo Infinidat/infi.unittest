@@ -15,5 +15,7 @@ from .call import Call
 from .loader import TestLoader
 from .result import TestResult
 
+from .exceptions import *
+
 defaultTestLoader = TestLoader
 

@@ -35,9 +35,13 @@ def get_test_and_validator():
 def get_sample_package_root():
     return os.path.join(os.path.dirname(__file__), "..", "sample_test_packages")
 
-def run_suite_assert_success(suite, num_tests):
+def run_suite(suite):
     result = TestResult()
     suite.run(result)
+    return result
+
+def run_suite_assert_success(suite, num_tests):
+    result = run_suite(suite)
     assert not result.failures
     assert not result.errors
     assert not result.skipped

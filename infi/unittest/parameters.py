@@ -4,6 +4,7 @@ import functools
 from collections import defaultdict
 from .python3_compat import items_list
 from .call import Call, EMPTY_CALL
+from .exceptions import InvalidBaseClassException
 
 def iterate(argument_name, options):
     def _decorator(func):
@@ -12,12 +13,18 @@ def iterate(argument_name, options):
         if created:
             @functools.wraps(func)
             def new_func(self):
-                call = self._spec_call_bindings[spec.id]
+                call = _get_spec_call_bindings(self)[spec.id]
                 return func(self, *call.args, **call.kwargs)
         else:
             new_func = func
         return new_func
     return _decorator
+
+def _get_spec_call_bindings(obj):
+    returned = getattr(obj, "_spec_call_bindings", None)
+    if returned is None:
+        raise InvalidBaseClassException("{0} does not derive from infi.unittest.TestCase, or did not initialize properly".format(obj))
+    return returned
 
 def toggle(*names):
     def _decorator(func):
