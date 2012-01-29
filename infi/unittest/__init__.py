@@ -14,6 +14,7 @@ from .case import TestCase
 from .call import Call
 from .loader import TestLoader
 from .result import TestResult
+from .abstract_base import abstract_base_test
 
 from .exceptions import *
 

@@ -143,7 +143,38 @@ infi.unittest can even multiply across inheritence. This means that the followin
  ...         self.do_something_with(self.base_param, self.derived_param)
 
 Note that even the super() call to setUp doesn't need to bother with the parameter(s) - it gets automatically bound.
- 
+
+Abstract Base Tests
+===================
+
+Sometimes you would like to include a 'base test' to facilitate code reuse. For example in cases like:
+
+ >>> class FileTestBase(TestCase):
+ ...     def test__has_write_method(self):
+ ...         self.assertTrue(hasattr(self.file, "write"))
+ ...     def test__has_read_method(self):
+ ...         self.assertTrue(hasattr(self.file, "read"))
+ >>> class RegularFileTest(FileTestBase):
+ ...     def setUp(self):
+ ...         super(RegularFileTest, self).setUp()
+ ...         self.file = open("somefile", "wb")
+ >>> class SocketFileTest(FileTestBase):
+ ...     def setUp(self):
+ ...         super(SocketFileTest, self).setUp()
+ ...         self.file = connect_to_some_server().makefile()
+
+In this case a regular test discovery mechanism would catch flames, because it would attempt to run FileTestBase itself, which has an incomplete setUp scheme.
+
+*infi.unittest* provides an easy shortcut for this. Just mark the base class like so:
+
+ >>> from infi.unittest import abstract_base_test
+ >>> @abstract_base_test
+ ... class FileTestBase(TestCase):
+ ...     pass
+
+And the base test itself will not be run directly.
+
 Nose Integration
 ================
 *infi.unittest* breaks compatibility with the excellent `nose: <http://code.google.com/p/python-nose/>` tool, so it provides a nose plugin to handle with its tests. The plugin is automatically enabled for you, so you don't have to pass the --with-infi flag to nosetests.
+

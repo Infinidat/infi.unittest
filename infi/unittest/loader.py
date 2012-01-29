@@ -2,6 +2,7 @@ from __future__ import absolute_import
 import functools
 import logging
 import unittest
+from .abstract_base import is_abstract_base_test
 from .parameters import get_parameter_spec
 from .parameters import NO_SPECS
 from .test_filter import TestFilter
@@ -12,6 +13,8 @@ class TestLoader(unittest.TestLoader):
         test_filter = TestFilter.parse_filters(kwargs.pop('filters', None))
         return test_filter.filter(super(TestLoader, self).discover(*args, **kwargs))
     def loadTestsFromTestCase(self, testCaseClass):
+        if is_abstract_base_test(testCaseClass):
+            return self.suiteClass([])
         return self.suiteClass(self._get_test_cases(testCaseClass))
     def _get_test_cases(self, test_case_class):
         # a bit of copy-paste from the default implementation, unfortunately
