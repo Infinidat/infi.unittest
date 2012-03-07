@@ -174,6 +174,8 @@ In this case a regular test discovery mechanism would catch flames, because it w
 
 And the base test itself will not be run directly.
 
+.. note:: This technique currently doesn't work with *nose*. This is because in many cases, nose 'transplants' classes into modules where they don't belong -- this is done by subclassing them, which immediately means the classes are no longer abstract.
+
 Nose Integration
 ================
 *infi.unittest* breaks compatibility with the excellent `nose: <http://code.google.com/p/python-nose/>` tool, so it provides a nose plugin to handle with its tests. The plugin is automatically enabled for you, so you don't have to pass the --with-infi flag to nosetests.
