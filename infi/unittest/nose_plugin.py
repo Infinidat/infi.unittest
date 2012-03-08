@@ -1,5 +1,6 @@
 from nose.plugins.base import Plugin
 from nose.loader import TestLoader as NoseTestLoader
+from .abstract_base import is_abstract_base_test
 from .loader import get_test_cases_from_test_class
 from .python3_compat import create_instance_method
 
@@ -16,9 +17,10 @@ class NosePlugin(Plugin):
         def loadTestsFromTestCase(self, testCaseClass):
             cases = []
             plugins = self.config.plugins
-            for case in plugins.loadTestsFromTestCase(testCaseClass):
-                cases.append(case)
-            cases.extend(get_test_cases_from_test_class(testCaseClass))
+            if not is_abstract_base_test(testCaseClass):
+                for case in plugins.loadTestsFromTestCase(testCaseClass):
+                    cases.append(case)
+                cases.extend(get_test_cases_from_test_class(testCaseClass))
             return self.suiteClass(cases)
         return create_instance_method(loadTestsFromTestCase, loader)
 

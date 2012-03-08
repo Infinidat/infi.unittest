@@ -174,7 +174,7 @@ In this case a regular test discovery mechanism would catch flames, because it w
 
 And the base test itself will not be run directly.
 
-.. note:: This technique currently doesn't work with *nose*. This is because in many cases, nose 'transplants' classes into modules where they don't belong -- this is done by subclassing them, which immediately means the classes are no longer abstract.
+.. note:: *nose* as an issue with this technique. There is a workaround in place, but it involves live patching of a nose utility function, so there is a chance it will break in updates, or not work at all in some cases. Until this issue is resolved (https://github.com/nose-devs/nose/issues/502), nose support should be considered experimental.
 
 Nose Integration
 ================
