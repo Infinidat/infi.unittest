@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 with open(os.path.join(os.path.dirname(__file__), "infi", "unittest", "__version__.py"), "rb") as version_file:
     exec(version_file.read())
 
-_REQUIREMENTS = ["pyforge", "bunch"]
+_REQUIREMENTS = ["pyforge", "bunch==1.0.0"]
 
 setup(name="infi.unittest",
       classifiers = [
