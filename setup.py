@@ -8,7 +8,7 @@ with open(os.path.join(os.path.dirname(__file__), "infi", "unittest", "__version
 
 _REQUIREMENTS = ["pyforge", "bunch==1.0.0"]
 if platform.python_version() < '2.7':
-    _INSTALL_REQUIREMENTS.append('unittest2')
+    _REQUIREMENTS.append('unittest2')
 
 
 setup(name="infi.unittest",
