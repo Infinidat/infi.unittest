@@ -19,7 +19,7 @@ class AbstractBaseClassesTest(unittest.TestCase):
         self.assertEquals(suite._tests, [])
         suite = TestLoader().loadTestsFromTestCase(DerivedTest)
         self.assertEquals(len(suite._tests), 3)
-        self.assertItemsEqual(
-            [t._testMethodName for t in suite._tests],
-            ['test__a', 'test__b', 'test__c']
+        self.assertEqual(
+            set([t._testMethodName for t in suite._tests]),
+            set(['test__a', 'test__b', 'test__c'])
             )
