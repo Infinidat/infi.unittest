@@ -1,5 +1,5 @@
-import platform
 import os
+import platform
 import itertools
 from setuptools import setup, find_packages
 
@@ -7,6 +7,9 @@ with open(os.path.join(os.path.dirname(__file__), "infi", "unittest", "__version
     exec(version_file.read())
 
 _REQUIREMENTS = ["pyforge", "bunch==1.0.0"]
+if platform.python_version() < '2.7':
+    _INSTALL_REQUIREMENTS.append('unittest2')
+
 
 setup(name="infi.unittest",
       classifiers = [
