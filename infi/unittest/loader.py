@@ -8,6 +8,7 @@ from .parameters import get_parameter_spec
 from .parameters import NO_SPECS
 from .test_filter import TestFilter
 from .case import TestCase as InfiTestCase
+from .python3_compat import UnboundMethodType
 
 class TestLoader(unittest.TestLoader):
     def discover(self, *args, **kwargs):
@@ -40,7 +41,7 @@ class TestLoader(unittest.TestLoader):
             return self.loadTestsFromModule(obj)
         elif isinstance(obj, type) and issubclass(obj, unittest.TestCase):
             return self.loadTestsFromTestCase(obj)
-        elif (isinstance(obj, types.UnboundMethodType) and
+        elif (isinstance(obj, UnboundMethodType) and
               isinstance(parent, type) and
               issubclass(parent, unittest.TestCase)):
             return self.suiteClass(self._get_multipled_cases(parent, obj.__name__))
