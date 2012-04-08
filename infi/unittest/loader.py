@@ -2,6 +2,7 @@ from __future__ import absolute_import
 import functools
 import logging
 import unittest
+import types
 from .abstract_base import is_abstract_base_test
 from .parameters import get_parameter_spec
 from .parameters import NO_SPECS
@@ -16,6 +17,44 @@ class TestLoader(unittest.TestLoader):
         if is_abstract_base_test(testCaseClass):
             return self.suiteClass([])
         return self.suiteClass(self._get_test_cases(testCaseClass))
+    def loadTestsFromName(self, name, module=None):
+        parts = name.split('.')
+        # Import module
+        if module is None:
+            parts_copy = parts[:]
+            while parts_copy:
+                try:
+                    module = __import__('.'.join(parts_copy))
+                    break
+                except ImportError:
+                    del parts_copy[-1]
+                    if not parts_copy:
+                        raise
+            parts = parts[1:]
+        # Get nested attribute
+        obj = module
+        for part in parts:
+            parent, obj = obj, getattr(obj, part)
+        # Instantiate test
+        if isinstance(obj, types.ModuleType):
+            return self.loadTestsFromModule(obj)
+        elif isinstance(obj, type) and issubclass(obj, unittest.TestCase):
+            return self.loadTestsFromTestCase(obj)
+        elif (isinstance(obj, types.UnboundMethodType) and
+              isinstance(parent, type) and
+              issubclass(parent, unittest.TestCase)):
+            return self.suiteClass(self._get_multipled_cases(parent, obj.__name__))
+        elif isinstance(obj, suite.TestSuite):
+            return obj
+        elif hasattr(obj, '__call__'):
+            test = obj()
+            if isinstance(test, suite.TestSuite):
+                return test
+            elif isinstance(test, unittest.TestCase):
+                return self.suiteClass([test])
+            else:
+                raise TypeError("calling %s returned %s, not a test" % (obj, test))
+        raise TypeError("don't know how to make test from: %s" % obj)
     def _get_test_cases(self, test_case_class):
         # a bit of copy-paste from the default implementation, unfortunately
         test_case_names = self.getTestCaseNames(test_case_class)
