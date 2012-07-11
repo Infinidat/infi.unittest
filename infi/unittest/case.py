@@ -29,11 +29,13 @@ class TestCase(unittest.TestCase):
         spec = get_parameter_spec(self.setUp)
         return self._spec_call_bindings.get(spec.id, EMPTY_CALL)
     def get_method_call(self):
-        method = getattr(self, self._testMethodName, None)
+        method = self._get_test_method()
         if method is None:
             return EMPTY_CALL
         spec = get_parameter_spec(method)
         return self._spec_call_bindings.get(spec.id, EMPTY_CALL)
+    def _get_test_method(self):
+        return getattr(self, self._testMethodName, None)
     @classmethod
     def _get_all_cases(cls, method_name):
         for setup_specs_and_calls in cls._get_setup_specs_and_calls():
