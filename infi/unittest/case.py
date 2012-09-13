@@ -34,6 +34,8 @@ class TestCase(unittest.TestCase):
             return EMPTY_CALL
         spec = get_parameter_spec(method)
         return self._spec_call_bindings.get(spec.id, EMPTY_CALL)
+    def id(self):
+        return "{0}.{1}".format(self.get_module_base_name(), str(self))
     def _get_test_method(self):
         return getattr(self, self._testMethodName, None)
     @classmethod
