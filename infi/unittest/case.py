@@ -76,7 +76,6 @@ class TestCase(unittest.TestCase):
     def __repr__(self):
         return "<{0}.{1}>".format(self.get_module_full_name(), self)
     def __str__(self):
-        returned = self.get_class_name()
         return "{0}{1}.{2}{3}".format(
             self.get_class_name(),
             self._get_call_str_if_not_empty(self.get_setup_call()),
