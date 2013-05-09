@@ -15,7 +15,7 @@ class Call(object):
         raise TypeError("Call objects are unhashable")
     def __repr__(self):
         args_item_strs = map(repr, self.args)
-        kwargs_item_strs = ("{0}={1!r}".format(key, value) for key, value in iteritems(self.kwargs))
+        kwargs_item_strs = ("{0}={1!r}".format(key, value) for key, value in sorted(iteritems(self.kwargs)))
         return "({0})".format(", ".join(itertools.chain(args_item_strs, kwargs_item_strs)))
     def __nonzero__(self):
         return bool(self.args) or bool(self.kwargs)
