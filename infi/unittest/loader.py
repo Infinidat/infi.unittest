@@ -72,11 +72,6 @@ class TestLoader(unittest.TestLoader):
         if issubclass(test_case_class, InfiTestCase):
             return test_case_class._get_all_cases(test_case_name)
         return [test_case_class(test_case_name)]
-    def _iterate_setups(self, test_case_class):
-        spec = get_parameter_spec(test_case_class.setUp)
-        if spec is NO_SPECS:
-            return [[]]
-        return [[(spec.id, call)] for call in spec.iterate_calls()]
 
 default_loader = TestLoader()
 get_test_cases_from_test_class = default_loader._get_test_cases

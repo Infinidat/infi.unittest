@@ -60,7 +60,7 @@ class TestCase(unittest.TestCase):
     def _get_setups(cls):
         returned = []
         for c in cls.__mro__:
-            setup = getattr(c, "setUp", None)
+            setup = c.__dict__.get("setUp", None)
             if setup is None:
                 continue
             returned.append(setup)

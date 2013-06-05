@@ -1,6 +1,6 @@
 import itertools
 import unittest
-from infi.unittest import TestCase, TestLoader, parameters, TestResult
+from infi.unittest import TestCase, TestLoader, parameters, TestResult, abstract_base_test
 from test_utils import run_suite_assert_success, run_suite
 
 class ParametersTest(unittest.TestCase):
@@ -85,3 +85,23 @@ class SetupParametersAcrossInheritenceTest(unittest.TestCase):
                 run.add((self.base_param_a, self.base_param_b, self.derived_param))
         run_suite_assert_success(TestLoader().loadTestsFromTestCase(Derived), len(expected))
         self.assertEquals(run, expected)
+
+    def test__inheritence_abstract_bases(self):
+        @abstract_base_test
+        class Base1(TestCase):
+            def setUp(self):
+                super(Base1, self).setUp()
+            def tearDown(self):
+                super(Base1, self).tearDown()
+            def test(self):
+                pass
+        @abstract_base_test
+        class Base2(Base1):
+            @parameters.iterate('iterator', [0, 1])
+            def setUp(self, iterator):
+                super(Base2, self).setUp()
+            def tearDown(self):
+                super(Base2, self).tearDown()
+        class Derived(Base2):
+            pass
+        run_suite_assert_success(TestLoader().loadTestsFromTestCase(Derived), 2)
