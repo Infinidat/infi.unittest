@@ -1,5 +1,14 @@
+import sys
 import platform
 from types import MethodType
+
+if sys.version_info < (2, 7):
+    import unittest2 as unittest_module
+    PYTHON_2_7_OR_HIGHER = False
+else:
+    import unittest as unittest_module
+    PYTHON_2_7_OR_HIGHER = True
+
 
 IS_PY3 = (platform.python_version() >= '3')
 
@@ -18,6 +27,6 @@ else:
     from __builtin__ import basestring
     from __builtin__ import reduce
     from types import UnboundMethodType
-    
+
 def items_list(dictionary):
     return list(iteritems(dictionary))

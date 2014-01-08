@@ -2,7 +2,7 @@ import logging
 import itertools
 import functools
 from collections import defaultdict
-from .python3_compat import items_list
+from ._compat import items_list
 from .call import Call, EMPTY_CALL
 from .exceptions import InvalidBaseClassException
 

@@ -1,5 +1,5 @@
-import unittest
-from infi.unittest.python3_compat import reduce
+from infi.unittest._compat import unittest_module as unittest
+from infi.unittest._compat import reduce
 from infi.unittest import TestCase as InfiTestCase
 from infi.unittest import TestLoader as InfiTestLoader
 from infi.unittest import parameters

@@ -1,4 +1,4 @@
-import unittest
+from infi.unittest._compat import unittest_module as unittest
 from infi.unittest import abstract_base_test, TestCase, TestLoader
 
 #prevent nose from discovering this...

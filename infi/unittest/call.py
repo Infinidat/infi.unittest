@@ -1,5 +1,5 @@
 import itertools
-from .python3_compat import iteritems
+from ._compat import iteritems
 
 class Call(object):
     def __init__(self, *args, **kwargs):

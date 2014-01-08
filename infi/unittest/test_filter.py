@@ -1,11 +1,11 @@
 from ast import literal_eval
 import re
 import bunch
-import unittest
+from ._compat import unittest_module as unittest
 from .call import EMPTY_CALL, Call
 from .case import TestCase as InfiTestCase
 from .filter_syntax import FILTER_STRING_PATTERN
-from .python3_compat import basestring, iteritems
+from ._compat import basestring, iteritems
 
 class TestFilter(object):
     @classmethod

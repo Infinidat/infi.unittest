@@ -2,7 +2,7 @@ from nose.plugins.base import Plugin
 from nose.loader import TestLoader as NoseTestLoader
 from .abstract_base import is_abstract_base_test
 from .loader import get_test_cases_from_test_class
-from .python3_compat import create_instance_method
+from ._compat import create_instance_method
 
 class NosePlugin(Plugin):
     name = "infi"

@@ -2,14 +2,11 @@ from __future__ import absolute_import
 import sys
 import itertools
 import platform
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
+from ._compat import unittest_module as unittest
 from .call import EMPTY_CALL
 from .parameters import get_parameter_spec
 from .parameters import NO_SPEC_ID
-from .python3_compat import iteritems
+from ._compat import iteritems
 
 class TestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
