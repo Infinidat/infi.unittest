@@ -1,14 +1,14 @@
 from __future__ import absolute_import
 import functools
 import logging
-import unittest
 import types
+from ._compat import unittest_module as unittest
 from .abstract_base import is_abstract_base_test
 from .parameters import get_parameter_spec
 from .parameters import NO_SPECS
 from .test_filter import TestFilter
 from .case import TestCase as InfiTestCase
-from .python3_compat import UnboundMethodType
+from ._compat import UnboundMethodType
 
 class TestLoader(unittest.TestLoader):
     def discover(self, *args, **kwargs):

@@ -1,6 +1,7 @@
 import os
 import itertools
-import unittest
+from infi.unittest._compat import unittest_module as unittest
+from infi.unittest._compat import PYTHON_2_7_OR_HIGHER
 from infi.unittest import TestCase as InfiTestCase
 from infi.unittest import TestLoader
 from infi.unittest import TestResult
@@ -44,7 +45,8 @@ def run_suite_assert_success(suite, num_tests):
     result = run_suite(suite)
     assert not result.failures
     assert not result.errors
-    assert not result.skipped
+    if PYTHON_2_7_OR_HIGHER:
+        assert not result.skipped
     assert result.testsRun == num_tests, "{0} tests expected to run, but {1} actually run!".format(num_tests, result.testsRun)
     return result
 

@@ -1,4 +1,4 @@
-import unittest
+from infi.unittest._compat import unittest_module as unittest
 from test_utils import get_sample_package_root
 from test_utils import run_suite_assert_success
 from test_utils import count_number_of_cases_in_directory

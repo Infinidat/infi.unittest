@@ -1,5 +1,5 @@
 import itertools
-import unittest
+from infi.unittest._compat import unittest_module as unittest
 from infi.unittest import TestCase, TestLoader, parameters, TestResult, abstract_base_test
 from test_utils import run_suite_assert_success, run_suite
 

@@ -1,4 +1,6 @@
-import unittest
+from infi.unittest._compat import unittest_module as unittest
+from infi.unittest._compat import PYTHON_2_7_OR_HIGHER
+import sys
 import forge
 from infi.unittest import TestLoader, TestResult
 from infi.unittest import nose_plugin
@@ -37,5 +39,6 @@ class NosePluginTest(unittest.TestCase):
         self.assertTrue(self.extra_test_called)
         self.assertTrue(validator.is_successful())
         self.assertEquals(result.failures, [])
-        self.assertEquals(result.skipped, [])
+        if PYTHON_2_7_OR_HIGHER:
+            self.assertEquals(result.skipped, [])
         self.assertEquals(result.errors, [])
