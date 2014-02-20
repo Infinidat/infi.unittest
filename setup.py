@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 with open(os.path.join(os.path.dirname(__file__), "infi", "unittest", "__version__.py"), "rb") as version_file:
     exec(version_file.read())
 
-_REQUIREMENTS = ["pyforge", "bunch==1.0.0"]
+_REQUIREMENTS = ["pyforge", "munch"]
 if sys.version_info < (2, 7):
     _REQUIREMENTS.append('unittest2')
 

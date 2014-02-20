@@ -1,6 +1,6 @@
 from ast import literal_eval
 import re
-import bunch
+import munch
 from ._compat import unittest_module as unittest
 from .call import EMPTY_CALL, Call
 from .case import TestCase as InfiTestCase
@@ -76,7 +76,7 @@ class NullFilter(TestFilter):
         return suite
 
 def _parse_filter_string(s):
-    returned = bunch.Bunch(FILTER_STRING_PATTERN.match(s).groupdict())
+    returned = munch.Munch(FILTER_STRING_PATTERN.match(s).groupdict())
     for key in returned:
         if not returned[key]:
             returned[key] = None
